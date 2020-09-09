@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<title>TODO_LIST</title>
+<style>
+    #timing {
+        width: 250px;
+        height: 150px;
+        position: absolute;
+        right: 20px;
+        margin-top: 0px;
+        padding-bottom:0px;
+        padding-left: 0px;     
+    }
+
+    .first_line_color {
+         
+        width: 750px;
+        height: 150px;
+        margin-left:5px;
+        color: blue;
+        font-size: 16px;
+        font-family: serif;  
+    }
+    .container
+    {
+        background-color:#C6E3A7;
+        margin:0px;  
+        background-image:url(4.jpeg);
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+   
+</style>
+
+<body class="container"> 
+    <!--Showing time using java scrept-->
+    <div id="timing">
+    <!--for showing watch timing-->
+    </div>
+    <div class="first_line_color">
+        <h1 class=px=3px>“It is easy to be a good person when times are good.”
+            <br>“Time is a created thing. To say 'I don't havetime,'<br>
+             is like saying, 'I don't want to.”
+        </h1>
+            <div style="color:red;position:absolute;right:500px;top:110px">
+            <h2 >― Albert Einstein</h2>
+            </div>
+    </div>
+<!--<img style="background-image:url(watc.jpg);width:100%;height:900px">-->
+<h1 style="font-size:50px;font-color:bule;font-family:serif;"><center>ToDo List</center></h1>
+<div>
+
+  <div class="form-group">
+    <label for="title"><h2 style="margin-left:20%;color:#007bff;">Title</h2></label>
+    <input style="margin-left:20%;margin-top=5%;width:500px;height:15px;"type="text" class="form-control" id="title" aria-describedby="emailHelp">
+    <br>
+    <small id="object" class="form-text text-muted"><h3 style="margin-left:20%;margin-top=5%">Add an Item to the List</h3></small>
+  </div>
+  
+ <div class="form-group purple-border">
+  <label for="dec"><h2 style="margin-left:20%;color:#007bff;">Title Description</h2></label>
+  <textarea  style="margin-left:20%;width:500px;height:100px;margin-bottom:40px;"class="form-control" id="dec" rows="3"></textarea>
+
+    <button id="add" style="background-color:#007bff" class="btn btn-primary;margin-right:20%;">Add to List</button>
+     <button id="clear" style="background-color:red;margin-right:20%;padding=50px;" onclick="clear_storage()"class="btn btn-primary;">Clear the list</button>
+<div id="items" class="my-4">
+<h2  style="margin-left:20%;">Your Items</h2>
+<table style="width:75%;margin-top=20%;text-align:center;padding:20px;margin-left:10%"class="table">
+  <thead>
+  <tr>
+    <th scope="col">Serial_no</th>
+    <th scope="col">Title_Name</th>
+    <th scope="col">Title_description</th> 
+    <th  scope="col" style="color:red">Action</th>
+  </tr> 
+  </thead>
+  <tbody id="tableBody">
+  <tr style="padding-top:10%">
+    <th scope="row">1</th>
+    <td>bgrvf</td>
+    <td>vrtvr</td>
+    <td><button  class="btn btn-sm btn-primary"style="background-color:blue">Delete</button>
+  </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+<script>
+let a;let result2;let result1;let result;let tat;let dat;
+
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+setInterval(()=>{
+a=new Date();
+tat=a.getHours()+'  :  '+a.getMinutes()+'  :  '+a.getSeconds();
+result = tat.fontsize(9);
+dat=a.toLocaleDateString(undefined,options);
+result1=dat.fontsize(5);
+result2=result1.fontcolor("red");
+document.getElementById("timing").innerHTML=result+"<br>"+result2;
+},1000);
+</script>
+<script>
+function getAndupdate()
+{
+    console.log("updating List...");
+    tit=document.getElementById('title').value;
+    desc=document.getElementById('dec').value;
+    if(localStorage.getItem('itemsJson')==null)
+    {
+      itemJsonArray=[];
+      itemJsonArray.push([tit,desc]);
+      localStorage.setItem('itemsJson',JSON.stringify(itemJsonArray));
+    }
+    else
+    {
+      itemJsonArrayStr=localStorage.getItem('itemsJson');
+      itemJsonArray=JSON.parse(itemJsonArrayStr);
+      itemJsonArray.push([tit,desc]);
+      localStorage.setItem('itemsJson',JSON.stringify(itemJsonArray));
+    }
+    update();
+} 
+function update()
+{
+    //population of  table
+    if(localStorage.getItem('itemsJson')==null)
+    {
+      itemJsonArray=[];
+      localStorage.setItem('itemsJson',JSON.stringify(itemJsonArray));
+    }
+    else
+    {
+      itemJsonArrayStr=localStorage.getItem('itemsJson');
+      itemJsonArray=JSON.parse(itemJsonArrayStr);
+    }
+    let tableBody=document.getElementById("tableBody");
+    let str="";
+    itemJsonArray.forEach((element,index)=>{
+      str +=`
+        <tr>
+        <th scope="row">${index+1}</th>
+        <td>${element[0]}</td>
+        <td>${element[1]}</td>
+        <td><button  class="btn btn-sm btn-primary"style="background-color:blue" onclick="deleted(${index})">Delete</button></td>
+       </tr>`;
+      });
+      tableBody.innerHTML=str;
+}
+    add=document.getElementById("add");
+    add.addEventListener("click",getAndupdate);
+    update(); 
+    //////////////////delete
+    function deleted(itemIndex)
+    {
+      console.log("deleted",itemIndex); 
+      itemJsonArrayStr=localStorage.getItem('itemsJson');
+      itemJsonArray=JSON.parse(itemJsonArrayStr);
+      //deleted data from table..
+      itemJsonArray.splice(itemIndex,1);
+      localStorage.setItem('itemsJson',JSON.stringify(itemJsonArray));
+      update();
+    }
+  ////////////delete
+
+  ////delete all
+  function clear_storage()
+  {
+    console.log("total_storage_cleared");
+    alert("Are you sure , delete a whole list ");
+    localStorage.clear();
+    update();
+  }
+</script>
+</body>
+
+
+</html>
